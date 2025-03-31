@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingIndicator.classList.remove('hidden');
         screenshotBtn.disabled = true;
         const currentUrl = window.location.href;
-        fetch('https://assignment-c353.onrender.com/api/screenshot', {
+        fetch('https://assignment-1-gnkf.onrender.com/api/screenshot', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
