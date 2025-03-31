@@ -1,8 +1,6 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const cors = require('cors');
-const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,32 +18,28 @@ app.post('/api/screenshot', async (req, res) => {
     }
 
     console.log(`Taking screenshot of: ${url}`);
+
     const browser = await puppeteer.launch({
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || await puppeteer.executablePath(),
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        headless: 'new' 
-      });
-      
-    
+      headless: true, // Ensures Puppeteer runs in headless mode
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+
     const page = await browser.newPage();
-    await page.setViewport({
-      width: 800,
-      height: 600,
-      deviceScaleFactor: 2 
-    });
-    
+    await page.setViewport({ width: 800, height: 600, deviceScaleFactor: 2 });
+
     await page.goto(url, { waitUntil: 'networkidle0' });
-    
-    await page.waitForSelector('#infographic', { timeout: 5000 });
-    
+
+    // Check if the #infographic element exists before attempting screenshot
     const element = await page.$('#infographic');
-    const screenshot = await element.screenshot({
-      type: 'png',
-      omitBackground: false
-    });
-    
+    if (!element) {
+      throw new Error('Element #infographic not found on page.');
+    }
+
+    const screenshot = await element.screenshot({ type: 'png', omitBackground: false });
+
     await browser.close();
-    
+
     res.set('Content-Type', 'image/png');
     res.set('Content-Disposition', 'attachment; filename="pinterest-infographic.png"');
     res.send(screenshot);
@@ -55,8 +49,6 @@ app.post('/api/screenshot', async (req, res) => {
     res.status(500).json({ error: 'Failed to take screenshot', details: error.message });
   }
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
