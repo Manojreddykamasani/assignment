@@ -21,9 +21,11 @@ app.post('/api/screenshot', async (req, res) => {
 
     console.log(`Taking screenshot of: ${url}`);
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: 'new'
-    });
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || await puppeteer.executablePath(),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: 'new' 
+      });
+      
     
     const page = await browser.newPage();
     await page.setViewport({
