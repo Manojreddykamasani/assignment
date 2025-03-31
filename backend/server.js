@@ -1,5 +1,5 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const { chromium } = require('playwright');
 const cors = require('cors');
 
 const app = express();
@@ -19,24 +19,17 @@ app.post('/api/screenshot', async (req, res) => {
 
     console.log(`Taking screenshot of: ${url}`);
 
-    const browser = await puppeteer.launch({
-      headless: true, // Ensures Puppeteer runs in headless mode
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-
+    const browser = await chromium.launch();
     const page = await browser.newPage();
-    await page.setViewport({ width: 800, height: 600, deviceScaleFactor: 2 });
+    await page.setViewportSize({ width: 800, height: 600 });
 
-    await page.goto(url, { waitUntil: 'networkidle0' });
-
-    // Check if the #infographic element exists before attempting screenshot
-    const element = await page.$('#infographic');
-    if (!element) {
+    await page.goto(url, { waitUntil: 'networkidle' });
+    const element = await page.locator('#infographic');
+    if (!(await element.count())) {
       throw new Error('Element #infographic not found on page.');
     }
 
-    const screenshot = await element.screenshot({ type: 'png', omitBackground: false });
+    const screenshot = await element.screenshot({ type: 'png' });
 
     await browser.close();
 
