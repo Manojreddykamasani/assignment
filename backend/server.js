@@ -18,8 +18,10 @@ app.post('/api/screenshot', async (req, res) => {
     }
 
     console.log(`Taking screenshot of: ${url}`);
-
-    const browser = await chromium.launch({ args: ['--no-sandbox'] });
+    const browser = await chromium.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     const page = await browser.newPage();
     await page.setViewportSize({ width: 800, height: 600 });
 
