@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingIndicator.classList.remove('hidden');
         screenshotBtn.disabled = true;
         const currentUrl = window.location.href;
-        fetch('/api/screenshot', {
+        fetch('https://assignment-production-e2ef.up.railway.app/api/screenshot', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
