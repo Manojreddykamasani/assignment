@@ -8,6 +8,11 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Health check route to confirm deployment
+app.get('/', (req, res) => {
+    res.send('Hello Manoj, your backend is deployed successfully!');
+});
+
 app.post('/api/screenshot', async (req, res) => {
     const { url } = req.body;
 
