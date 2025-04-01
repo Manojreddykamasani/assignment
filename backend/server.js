@@ -25,8 +25,8 @@ app.post('/api/screenshot', async (req, res) => {
     try {
         // ✅ Force Puppeteer to use the bundled Chromium
         browser = await puppeteer.launch({
-            headless: 'new',
-            executablePath: puppeteer.executablePath(),  // 🔥 Ensures Chromium is found
+            headless: true,  // Use standard headless mode
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
