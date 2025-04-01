@@ -18,8 +18,9 @@ app.post('/api/screenshot', async (req, res) => {
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: 'new', 
-            args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+            headless: 'new',
+            executablePath: '/usr/bin/google-chrome-stable', // Render uses pre-installed Chrome
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         const page = await browser.newPage();
