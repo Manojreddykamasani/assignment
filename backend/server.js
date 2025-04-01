@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const puppeteer = require('puppeteer'); // Do not use puppeteer-core
+const puppeteer = require('puppeteer');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -8,11 +8,12 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Health check route to confirm deployment
+// ✅ Root route to verify deployment
 app.get('/', (req, res) => {
     res.send('Hello Manoj, your backend is deployed successfully!');
 });
 
+// ✅ Screenshot API
 app.post('/api/screenshot', async (req, res) => {
     const { url } = req.body;
 
@@ -22,9 +23,11 @@ app.post('/api/screenshot', async (req, res) => {
 
     let browser;
     try {
+        // ✅ Force Puppeteer to use the bundled Chromium
         browser = await puppeteer.launch({
-            headless: "new",
-            args: ['--no-sandbox', '--disable-setuid-sandbox'] // Required for Render
+            headless: 'new',
+            executablePath: puppeteer.executablePath(),  // 🔥 Ensures Chromium is found
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         const page = await browser.newPage();
