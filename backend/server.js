@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer'); // Do not use puppeteer-core
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,9 +18,8 @@ app.post('/api/screenshot', async (req, res) => {
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: 'new',
-            executablePath: '/usr/bin/google-chrome-stable', // Render uses pre-installed Chrome
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            headless: "new",
+            args: ['--no-sandbox', '--disable-setuid-sandbox'] // Required for Render
         });
 
         const page = await browser.newPage();
