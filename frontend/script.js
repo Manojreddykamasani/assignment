@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         screenshotBtn.disabled = true;
 
         try {
-            const response = await fetch('https://assignment-whba.onrender.com/api/screenshot', {
+            const response = await fetch('https://assignment-ou84.onrender.com/api/screenshot', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: window.location.href }) // Send the current page URL
